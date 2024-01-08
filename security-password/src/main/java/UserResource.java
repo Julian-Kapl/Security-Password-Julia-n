@@ -1,4 +1,6 @@
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -7,12 +9,17 @@ import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Set;
 
 @Path("/api/v1/users")
 @Slf4j
 public class UserResource {
     @Inject
     private UserService service;
+
+    @Inject
+    Validator validator;
+
     @GET
     public Response getAllUsers() {
         return Response.ok(service.getAllUsers()).build();
@@ -55,6 +62,11 @@ public class UserResource {
         log.info("user {}", username);
         log.info("new password", newUser.toString());
         try{
+            final Set<ConstraintViolation<User>> constraintViolations = validator.validate(newUser);
+            if (!constraintViolations.isEmpty()) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
             User user = service.getUser(username);
             log.info("Datenbankuser:" ,user.toString());
             user.setPassword(newUser.getPassword());

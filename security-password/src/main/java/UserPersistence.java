@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class UserPersistence {
     @Inject
     EntityManager entityManager;
+
     @Transactional
     public void saveUsers(final User user) {
         try{
@@ -31,7 +32,7 @@ public class UserPersistence {
 
     @Transactional
     public Collection<User> getAllUsers() {
-        return entityManager.createQuery("select u from User u").getResultList();
+        return entityManager.createQuery(User.QUERY_FIND_ALL).getResultList();
     }
 
     @Transactional
