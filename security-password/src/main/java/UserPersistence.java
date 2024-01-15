@@ -32,7 +32,7 @@ public class UserPersistence {
 
     @Transactional
     public Collection<User> getAllUsers() {
-        return entityManager.createQuery(User.QUERY_FIND_ALL).getResultList();
+        return entityManager.createNamedQuery(User.QUERY_FIND_ALL).getResultList();
     }
 
     @Transactional
