@@ -16,7 +16,7 @@ public class UserPersistence {
     EntityManager entityManager;
 
     @Transactional
-    public void saveUsers(final User user) {
+    public User saveUsers(final User user) {
         try{
             if(validateUsername(user) && validateTelephoneNumber(user) && validatePassword(user.getPassword())){
                 String salt = PasswordHasher.generateSalt();
@@ -28,6 +28,7 @@ public class UserPersistence {
         }catch(Exception ex){
             log.warn(ex.getMessage());
         }
+        return user;
     }
 
     @Transactional
